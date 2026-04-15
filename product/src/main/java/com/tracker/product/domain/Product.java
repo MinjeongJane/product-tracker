@@ -1,7 +1,16 @@
 package com.tracker.product.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "products")
 public class Product {
@@ -30,12 +39,6 @@ public class Product {
         this.createdBy = createdBy;
         this.status = ProductStatus.IDEA;
     }
-
-    public Long getId() { return id; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public String getCreatedBy() { return createdBy; }
-    public ProductStatus getStatus() { return status; }
 
     public void changeStatus(ProductStatus next) {
         this.status = next;
