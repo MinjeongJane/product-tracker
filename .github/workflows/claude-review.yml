@@ -1,0 +1,35 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  pull_request_review_comment:
+    types: [created]
+  issue_comment:
+    types: [created]
+
+jobs:
+  claude-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          direct_prompt: |
+            PR 코드를 리뷰해줘. 아래 관점으로 확인하고 한국어로 작성해.
+
+            1. **비즈니스 규칙 준수**: 상태 전이는 ProductStatusTransitionValidator 경유 여부, 스펙 불변(insert-only) 여부, changeReason 필수 여부, 상품 삭제 IDEA 상태 제한 여부
+            2. **예외 처리**: BusinessException 사용 여부, ErrorCode 적절성
+            3. **트랜잭션**: readOnly 설정 적절성, 쓰기 메서드 @Transactional 명시 여부
+            4. **코드 품질**: wildcard import 사용 여부, Lombok 활용 여부
+            5. **잠재적 버그 및 개선점**
+
+            문제가 없는 항목은 간략히 ✅로 표시하고, 문제가 있는 부분만 상세히 설명해줘.
