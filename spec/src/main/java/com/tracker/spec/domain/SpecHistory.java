@@ -6,11 +6,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "spec_history")
+@Table(
+        name = "spec_history",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uq_spec_product_version",
+                columnNames = {"product_id", "version"}
+        )
+)
 public class SpecHistory {
 
     @Id
